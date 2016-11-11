@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML>
+   <HEAD>
+      <TITLE>
+         Pascal Triangle
+      </TITLE>
+   </HEAD>
+<BODY>
+   <div id="area"></div>
+</BODY>
+</HTML>
+
+<!--<canvas id="canvas" width="200" height="200" ></canvas>-->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://code.createjs.com/tweenjs-0.5.0.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.2/TweenMax.min.js"></script>
+<script>
+var hex_values = [];
+function sortNumber(a,b) {
+    return a - b;
+}
+
+
+function draw_hex(row_number){
+hex_values[row_number] = [];
+  var center = $(window).width()/2;
+  var hex_width = 75;
+  var positions = Array();
+
+
+  if(row_number % 2 == 0){
+    for(i=0;i<(row_number+1);i++){
+      positions[i] = center +Math.pow(-1,i)*(parseInt(Math.ceil(i/2)))*hex_width;
+    }
+  }else{
+    center += 37.5;
+    for(i=0;i<(row_number+1);i++){
+      positions[i] = center +Math.pow(-1,i)*(parseInt(Math.ceil(i/2)))*hex_width;
+    }
+  }
+positions.sort(sortNumber);
+console.log(positions);
+for(i=0;i<(row_number+1);i++){
+	if((i) == 0 || (i)==row_number ){
+	  hex_values[row_number][i] = 1;
+	}else{
+	  hex_values[row_number][i] = hex_values[row_number-1][i] + hex_values[row_number-1][i-1]
+	}
+
+  var offset =  parseInt((i-1) / 2);
+  var selector = document.createElement("canvas");
+  selector.setAttribute("width", "56");
+  selector.setAttribute("height", "60");
+  selector.style.left = positions[i];
+
+  selector.style.top = 0;
+  selector.style.position = "absolute";
+
+
+var c2 = selector.getContext('2d');
+c2.fillStyle = '#000';
+c2.fillText(hex_values[row_number][i],26,30);
+c2.beginPath();
+c2.moveTo(38, 0);
+c2.lineTo(56,20);
+c2.lineTo(56, 40);
+c2.lineTo(38, 60);
+c2.lineTo(18, 60);
+c2.lineTo(0, 40);
+c2.lineTo(0, 20);
+c2.lineTo(18, 0);
+c2.closePath();
+c2.stroke();
+$("#area").append(selector);
+TweenLite.to(selector,4,{y: 40*row_number});
+
+}
+
+}
+
+</script>
+
+<script>
+var t = 0;
+draw_hex(t++)
+setInterval(function(){draw_hex(t++)},4000);
+
+
+
+
+</script>
